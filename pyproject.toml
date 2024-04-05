@@ -9,4 +9,8 @@ dependencies = [
   "numpy",
   "scipy",
   "opencv-python",
+  "click",
 ]
+
+[project.scripts]
+arpam-recon = "ulibarpam.main_cli:main"

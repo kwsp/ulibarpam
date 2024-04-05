@@ -243,6 +243,7 @@ def make_overlay(US, PA):
     img[logic_a] = PA[logic_a]
     return img
 
+
 ### Output write
 def write_images(path: str | Path, PAUS_img: np.ndarray):
     "Write PAUS_img plus overlay to path"
@@ -256,4 +257,3 @@ def write_images(path: str | Path, PAUS_img: np.ndarray):
     img[:, ncols * 2 :] = make_overlay(US, PA)
 
     cv2.imwrite(str(path), img)
-
