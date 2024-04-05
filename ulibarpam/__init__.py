@@ -10,7 +10,7 @@ RF_ALINE_SIZE = 2**13
 "Size of A-line is 8192, defined in DAQ"
 
 
-### IO
+### Input reading
 @dataclass
 class IOParams:
     rf_size_PA: int
@@ -101,7 +101,7 @@ class ReconParams:
             noise_floor_US=200,
             desired_dynamic_range_PA=40,
             desired_dynamic_range_US=48,
-            aline_rotation_offset=24,
+            aline_rotation_offset=22,
         )
         return recon_params
 
@@ -242,3 +242,18 @@ def make_overlay(US, PA):
     logic_a = PA.sum(2) > 10
     img[logic_a] = PA[logic_a]
     return img
+
+### Output write
+def write_images(path: str | Path, PAUS_img: np.ndarray):
+    "Write PAUS_img plus overlay to path"
+    ncols = PAUS_img.shape[1] // 2
+    PA = PAUS_img[:, :ncols]
+    US = PAUS_img[:, ncols:]
+    img = np.empty((PAUS_img.shape[0], ncols * 3, 3))
+
+    img[:, :ncols] = PA[:, :, np.newaxis]
+    img[:, ncols : ncols * 2] = US[:, :, np.newaxis]
+    img[:, ncols * 2 :] = make_overlay(US, PA)
+
+    cv2.imwrite(str(path), img)
+
